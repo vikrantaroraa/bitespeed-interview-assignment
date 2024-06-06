@@ -1,0 +1,65 @@
+.pipeline-node {
+  font-size: 11px;
+  width: 180px;
+  background: #fff;
+  color: #222;
+  border: 2px solid #f6f6f6;
+  border-radius: 6px;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sourceHandle {
+  top: 30px;
+  right: -3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 100%;
+  background-color: #778899;
+}
+
+.targetHandle {
+  top: 30px;
+  left: -3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #778899;
+}
+
+.custom-node-header {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #b1efe3;
+  padding: 0 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.icon-and-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.image-container {
+  height: 15px;
+  width: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.image-container img {
+  height: 100%;
+  width: 100%;
+}
+
+.custom-node__body {
+  padding: 0 8px;
+  flex: 1.2;
+  display: flex;
+  align-items: center;
+}

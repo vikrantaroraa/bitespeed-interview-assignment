@@ -1,0 +1,36 @@
+.sidebar {
+  background-color: lightblue;
+  padding: 8px;
+  min-height: 100%;
+}
+
+hr {
+  margin: 16px 0;
+}
+
+.message-node {
+  height: 60px;
+  width: 150px;
+  padding: 6px 0;
+  border: 2px solid #b3b7d8;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  cursor: grab;
+  background-color: #fff;
+}
+
+.image-container {
+  height: 18px;
+  width: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.image-container img {
+  height: 100%;
+  width: 100%;
+}

@@ -15,6 +15,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import MessageNode from "../../nodes/MessageNode";
 import { nanoid } from "nanoid";
+import Sidebar from "../Sidebar";
 
 // we define the nodeTypes outside of the component to prevent re-renderings
 // you could also use useMemo inside the component
@@ -97,6 +98,43 @@ const Flow = () => {
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
+
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      const type = event.dataTransfer.getData("application/reactflow");
+
+      // check if the dropped element is valid
+      if (typeof type === "undefined" || !type) {
+        return;
+      }
+
+      // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
+      // and you don't need to subtract the reactFlowBounds.left/top anymore
+      // details: https://reactflow.dev/whats-new/2023-11-10
+      const position = reactFlowInstance.screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+      const nodeId = nanoid();
+      const newNode = {
+        id: nodeId,
+        type,
+        position,
+        data: { label: `Node ${nodeId}` },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [reactFlowInstance, setNodes]
+  );
+
   return (
     <div className={styles["main-container"]}>
       <div className={styles["save-button-container"]}>
@@ -112,6 +150,9 @@ const Flow = () => {
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            onNodeClick={() => alert("node slecet kiya hai")}
             // fitView
           >
             <Controls />
@@ -119,9 +160,9 @@ const Flow = () => {
             <Background variant="dots" gap={12} size={1} />
           </ReactFlow>
         </div>
-        <div className="controls">
-          Controls
-          <button onClick={addSimpleNode}>Add Node</button>
+        <div className={styles["controls-container"]}>
+          {/* <button onClick={addSimpleNode}>Add Node</button> */}
+          <Sidebar />
         </div>
       </div>
     </div>

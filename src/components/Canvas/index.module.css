@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   background-color: lightblue;
+  border: 2px solid purple;
 }
 
 .save-button-container {
@@ -36,4 +37,10 @@
   width: 75%;
   height: 100%;
   border: 2px solid green;
+}
+
+.controls-container {
+  width: 25%;
+  height: 100%;
+  background-color: magenta;
 }
