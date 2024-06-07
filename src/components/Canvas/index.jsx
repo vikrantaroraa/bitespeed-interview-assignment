@@ -12,6 +12,8 @@ import ReactFlow, {
   ReactFlowProvider,
   getConnectedEdges,
 } from "reactflow";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "reactflow/dist/style.css";
 import MessageNode from "../../nodes/MessageNode";
@@ -36,6 +38,21 @@ const Flow = () => {
   const reactFlowInstance = useReactFlow();
   const { setViewport } = reactFlowInstance;
 
+  const notifyErrorSavingFlow = () =>
+    toast.error(
+      "you have more than 2 nodes on the canvas and more than 1 node have empty target handles",
+      {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      }
+    );
+
   const onSave = useCallback(() => {
     const connectedEdges = getConnectedEdges(nodes, edges);
     const allTargetsArray = connectedEdges.map((edge) => edge.target);
@@ -43,9 +60,7 @@ const Flow = () => {
     console.log(allUniqueTargetsSet);
     // checking the required condition as described in job description gdrive document
     if (nodes.length > 2 && allUniqueTargetsSet.size != nodes.length - 1) {
-      alert(
-        "you have more than 2 nodes on the canvas and more than 1 node have empty target handles"
-      );
+      notifyErrorSavingFlow();
       return;
     }
     if (reactFlowInstance) {
@@ -166,6 +181,7 @@ const Flow = () => {
             setIsANodeSelected={setIsANodeSelected}
           />
         </div>
+        <ToastContainer />
       </div>
     </div>
   );
