@@ -40,7 +40,7 @@ const Flow = () => {
 
   const notifyErrorSavingFlow = () =>
     toast.error(
-      "you have more than 2 nodes on the canvas and more than 1 node have empty target handles",
+      "You have more than 2 nodes on the canvas and more than 1 node have empty target handles",
       {
         position: "top-right",
         autoClose: 3000,
@@ -52,6 +52,18 @@ const Flow = () => {
         theme: "dark",
       }
     );
+
+  const notifyFlowSavedSuccessfully = () =>
+    toast.success("Flow saved successfully", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
 
   const onSave = useCallback(() => {
     const connectedEdges = getConnectedEdges(nodes, edges);
@@ -66,6 +78,7 @@ const Flow = () => {
     if (reactFlowInstance) {
       const flow = reactFlowInstance.toObject();
       localStorage.setItem(flowKey, JSON.stringify(flow));
+      notifyFlowSavedSuccessfully();
     }
   }, [reactFlowInstance, nodes, edges]);
 
