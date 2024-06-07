@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import styles from "./index.module.css";
 import { useCallback } from "react";
 import ReactFlow, {
@@ -23,50 +23,29 @@ const nodeTypes = {
   messageNode: MessageNode,
 };
 
-// const initialNodes = [
-//   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
-//   { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
-// ];
-// const initialNodes = [
-//   {
-//     id: "message-node-1",
-//     type: "messageNode",
-//     position: { x: 10, y: 10 },
-//     data: { label: "Message text" },
-//   },
-// ];
-// const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
-
 const flowKey = "message-flow";
 
 const Flow = () => {
+  const [isANodeSelected, setIsANodeSelected] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [selectedNodeLabel, setSelectedNodeLabel] = useState("");
+  const [selectedNodeId, setSelectedNodeId] = useState("");
 
   const reactFlowInstance = useReactFlow();
-  console.log("reactFlowInstance: ", reactFlowInstance);
   const { setViewport } = reactFlowInstance;
 
   const onSave = useCallback(() => {
     console.log(reactFlowInstance);
     if (reactFlowInstance) {
       const flow = reactFlowInstance.toObject();
-      // console.log("flow saved: ", flow);
-      // console.log("typeof flow saved: ", typeof flow);
-      // console.log("flow nodes saved: ", flow.nodes);
-      // console.log("typeof flow.nodes saved: ", typeof flow.nodes);
       localStorage.setItem(flowKey, JSON.stringify(flow));
     }
   }, [reactFlowInstance]);
 
   const onRestore = useCallback(() => {
     const restoreFlow = async () => {
-      // console.log("restore fn running");
       const flow = JSON.parse(localStorage.getItem(flowKey));
-      // console.log("typeof flow: ", typeof flow);
-      // console.log("typeof flow.nodes: ", typeof flow.nodes);
-      // console.log("flow nodes restored: ", flow.nodes);
-
       if (flow) {
         const { x = 0, y = 0, zoom = 1 } = flow.viewport;
         setNodes(flow.nodes || []);
@@ -78,21 +57,21 @@ const Flow = () => {
     restoreFlow();
   }, [setNodes, setViewport, setEdges]);
 
-  const addSimpleNode = useCallback(() => {
-    let newNodeId = nanoid();
-    const newNode = {
-      id: newNodeId,
-      data: {
-        label: `Node ${newNodeId}`,
-      },
-      position: {
-        x: Math.random() * window.innerWidth - 100,
-        y: Math.random() * window.innerHeight,
-      },
-      type: "messageNode",
-    };
-    setNodes((nds) => nds.concat(newNode));
-  }, [setNodes]);
+  // const addSimpleNode = useCallback(() => {
+  //   let newNodeId = nanoid();
+  //   const newNode = {
+  //     id: newNodeId,
+  //     data: {
+  //       label: `Node ${newNodeId}`,
+  //     },
+  //     position: {
+  //       x: Math.random() * window.innerWidth - 100,
+  //       y: Math.random() * window.innerHeight,
+  //     },
+  //     type: "messageNode",
+  //   };
+  //   setNodes((nds) => nds.concat(newNode));
+  // }, [setNodes]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -135,6 +114,23 @@ const Flow = () => {
     [reactFlowInstance, setNodes]
   );
 
+  const openUpdateNodeForm = (e, object) => {
+    setIsANodeSelected(true);
+    setSelectedNodeLabel(object.data.label);
+    setSelectedNodeId(object.id);
+  };
+
+  const updateSelectedNodeLabel = () => {
+    setNodes(
+      nodes.map((node) => {
+        return node.id === selectedNodeId
+          ? { ...node, data: { label: selectedNodeLabel } }
+          : node;
+      })
+    );
+    setIsANodeSelected(false);
+  };
+
   return (
     <div className={styles["main-container"]}>
       <div className={styles["save-button-container"]}>
@@ -152,7 +148,7 @@ const Flow = () => {
             nodeTypes={nodeTypes}
             onDrop={onDrop}
             onDragOver={onDragOver}
-            onNodeClick={() => alert("node slecet kiya hai")}
+            onNodeClick={(e, object) => openUpdateNodeForm(e, object)}
             // fitView
           >
             <Controls />
@@ -162,7 +158,12 @@ const Flow = () => {
         </div>
         <div className={styles["controls-container"]}>
           {/* <button onClick={addSimpleNode}>Add Node</button> */}
-          <Sidebar />
+          <Sidebar
+            isANodeSelected={isANodeSelected}
+            selectedNodeLabel={selectedNodeLabel}
+            setSelectedNodeLabel={setSelectedNodeLabel}
+            updateSelectedNodeLabel={updateSelectedNodeLabel}
+          />
         </div>
       </div>
     </div>
