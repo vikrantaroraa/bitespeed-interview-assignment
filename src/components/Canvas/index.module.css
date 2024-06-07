@@ -24,6 +24,10 @@
   border: 2px solid #8f97c7;
 }
 
+.save-button-container button:hover {
+  background-color: #fff;
+}
+
 .canvas-and-controls-container {
   height: 94%;
   width: 100%;

@@ -10,6 +10,7 @@ import ReactFlow, {
   addEdge,
   useReactFlow,
   ReactFlowProvider,
+  getConnectedEdges,
 } from "reactflow";
 
 import "reactflow/dist/style.css";
@@ -36,13 +37,24 @@ const Flow = () => {
   const { setViewport } = reactFlowInstance;
 
   const onSave = useCallback(() => {
-    console.log(reactFlowInstance);
+    const connectedEdges = getConnectedEdges(nodes, edges);
+    const allTargetsArray = connectedEdges.map((edge) => edge.target);
+    const allUniqueTargetsSet = new Set(allTargetsArray);
+    console.log(allUniqueTargetsSet);
+    // checking the required condition as described in job description gdrive document
+    if (nodes.length > 2 && allUniqueTargetsSet.size != nodes.length - 1) {
+      alert(
+        "you have more than 2 nodes on the canvas and more than 1 node have empty target handles"
+      );
+      return;
+    }
     if (reactFlowInstance) {
       const flow = reactFlowInstance.toObject();
       localStorage.setItem(flowKey, JSON.stringify(flow));
     }
-  }, [reactFlowInstance]);
+  }, [reactFlowInstance, nodes, edges]);
 
+  // restore the saved flow
   const onRestore = useCallback(() => {
     const restoreFlow = async () => {
       const flow = JSON.parse(localStorage.getItem(flowKey));
@@ -57,16 +69,19 @@ const Flow = () => {
     restoreFlow();
   }, [setNodes, setViewport, setEdges]);
 
+  // called when an edge is connected
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
 
+  // called when a node is dragged over the canvas
   const onDragOver = useCallback((event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
 
+  // called when a node is dropped on the canvas
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
@@ -99,6 +114,7 @@ const Flow = () => {
   );
 
   const openUpdateNodeForm = (e, object) => {
+    console.log(object); // object gives all the data about the selected node
     setIsANodeSelected(true);
     setSelectedNodeLabel(object.data.label);
     setSelectedNodeId(object.id);
@@ -112,6 +128,7 @@ const Flow = () => {
           : node;
       })
     );
+    // after updating the node label, setting below state to false will take back to nodes panel
     setIsANodeSelected(false);
   };
 
@@ -133,7 +150,7 @@ const Flow = () => {
             onDrop={onDrop}
             onDragOver={onDragOver}
             onNodeClick={(e, object) => openUpdateNodeForm(e, object)}
-            fitView
+            // fitView
           >
             <Controls />
             <MiniMap />
