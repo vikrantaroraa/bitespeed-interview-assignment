@@ -57,22 +57,6 @@ const Flow = () => {
     restoreFlow();
   }, [setNodes, setViewport, setEdges]);
 
-  // const addSimpleNode = useCallback(() => {
-  //   let newNodeId = nanoid();
-  //   const newNode = {
-  //     id: newNodeId,
-  //     data: {
-  //       label: `Node ${newNodeId}`,
-  //     },
-  //     position: {
-  //       x: Math.random() * window.innerWidth - 100,
-  //       y: Math.random() * window.innerHeight,
-  //     },
-  //     type: "messageNode",
-  //   };
-  //   setNodes((nds) => nds.concat(newNode));
-  // }, [setNodes]);
-
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
@@ -149,7 +133,7 @@ const Flow = () => {
             onDrop={onDrop}
             onDragOver={onDragOver}
             onNodeClick={(e, object) => openUpdateNodeForm(e, object)}
-            // fitView
+            fitView
           >
             <Controls />
             <MiniMap />
@@ -157,7 +141,6 @@ const Flow = () => {
           </ReactFlow>
         </div>
         <div className={styles["controls-container"]}>
-          {/* <button onClick={addSimpleNode}>Add Node</button> */}
           <Sidebar
             isANodeSelected={isANodeSelected}
             selectedNodeLabel={selectedNodeLabel}

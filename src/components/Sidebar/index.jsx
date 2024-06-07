@@ -29,7 +29,12 @@ const Sidebar = ({
     <aside className={styles["sidebar"]}>
       {!isANodeSelected ? (
         <>
-          <div>Note:- You can drag these nodes to the pane on the right.</div>
+          <div>Note:- You can drag these nodes to the pane on the left.</div>
+          <div>
+            Note:- Initial message shown in the node is the id of the newly
+            created node.
+          </div>
+
           <hr />
           <div
             className={styles["message-node"]}

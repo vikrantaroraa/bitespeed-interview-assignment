@@ -1,8 +1,6 @@
 .sidebar {
-  background-color: lightblue;
   padding: 8px;
   min-height: 100%;
-  border: 4px solid magenta;
 }
 
 hr {
