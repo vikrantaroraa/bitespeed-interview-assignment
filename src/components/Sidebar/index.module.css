@@ -14,9 +14,23 @@ hr {
   padding: 5px;
 }
 
+.message-heading-and-back-icon {
+  display: flex;
+}
+
+.back-icon {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
 .message-heading {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex: 9;
 }
 
 .message-node {

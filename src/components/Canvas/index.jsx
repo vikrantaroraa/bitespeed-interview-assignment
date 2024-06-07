@@ -163,6 +163,7 @@ const Flow = () => {
             selectedNodeLabel={selectedNodeLabel}
             setSelectedNodeLabel={setSelectedNodeLabel}
             updateSelectedNodeLabel={updateSelectedNodeLabel}
+            setIsANodeSelected={setIsANodeSelected}
           />
         </div>
       </div>
